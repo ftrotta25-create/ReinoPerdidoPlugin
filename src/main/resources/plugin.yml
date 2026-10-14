@@ -1,0 +1,19 @@
+name: ReinoPerdidoPlugin
+version: 1.0.0
+main: com.franchee.reino.ReinoPerdidoPlugin
+api-version: '1.20'
+author: Franchee
+description: El Reino Perdido de Florencia - dimension con ciudadela gigante, mobs modificados y jefe final.
+loadbefore: [Multiverse-Core]
+softdepend: [LibroFlorenciaPlugin, JefeCabraPlugin, MateSystemPlugin, EventoPlugin]
+
+commands:
+  reino:
+    description: Comandos del Reino Perdido
+    usage: /reino <crear|tp|info|jefe>
+    permission: reino.admin
+
+permissions:
+  reino.admin:
+    description: Administrar el Reino Perdido
+    default: op

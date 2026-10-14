@@ -1,0 +1,21 @@
+# Nombre del mundo del Reino Perdido. Tiene que coincidir con el que crees
+# (con /reino crear o con /mv create).
+mundo: reino_perdido
+
+# Semilla del mundo al crearlo con /reino crear (0 = aleatoria).
+semilla: 0
+
+# Radio del borde del mundo, en bloques (el mundo mide el doble).
+bordeMundo: 1200
+
+# Si es true, el plugin carga el mundo solo al iniciar el server
+# (si Multiverse no lo cargó antes).
+autoCargar: true
+
+# Si es true, no spawnean animales (queda un mundo mas hostil).
+bloquearAnimales: true
+
+jefe:
+  vida: 900
+  # Minutos que tarda en reaparecer despues de que lo matan.
+  minutosRespawn: 45
