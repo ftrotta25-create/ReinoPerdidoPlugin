@@ -62,7 +62,7 @@ public class ReinoPopulator extends BlockPopulator {
     private void decorar(long semilla, Terreno terreno, int cx, int cz, LimitedRegion region) {
         int baseX = cx * 16;
         int baseZ = cz * 16;
-        Random r = new Random(Hash.h(semilla, cx, cz, 77));
+        Random r = new Random(Hash.h(semilla, cx, cz, 0, 77));
 
         // Geodas de amatista bajo tierra (en todo el mundo)
         if (r.nextDouble() < 0.14) {
