@@ -19,3 +19,16 @@ jefe:
   vida: 900
   # Minutos que tarda en reaparecer despues de que lo matan.
   minutosRespawn: 45
+
+# Skin de Florencia, la jefa (opcional, requiere LibsDisguises + PacketEvents instalados).
+# Subi la skin a https://mineskin.org (modelo "Slim"/Alex para una skin de mujer) y pega aca
+# los dos campos "value" y "signature" que te da. Si lo dejas vacio, Florencia se ve como Evoker.
+skinFlorencia:
+  nombre: Florencia
+  value: ''
+  signature: ''
+
+# Efectos para que la dimension se sienta viva.
+ambiente:
+  efectos: true   # particulas y sonidos ambientales
+  titulos: true   # titulo al entrar a la dimension y a cada zona de la ciudadela

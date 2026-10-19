@@ -1,5 +1,6 @@
 package com.franchee.reino;
 
+import com.franchee.reino.ambiente.AmbienteManager;
 import com.franchee.reino.boss.BossFlorencia;
 import com.franchee.reino.estructuras.Ciudadela;
 import com.franchee.reino.estructuras.MiniEstructuras;
@@ -39,10 +40,13 @@ public class ReinoPerdidoPlugin extends JavaPlugin implements Listener {
     private ModificadorMobs mobs;
     private BossFlorencia boss;
     private ZonaManager zonas;
+    private AmbienteManager ambiente;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         // Las estructuras se arman una vez, aca, en el hilo principal, antes de generar ningun chunk.
         Ciudadela.inicializar();
@@ -52,14 +56,17 @@ public class ReinoPerdidoPlugin extends JavaPlugin implements Listener {
         mobs = new ModificadorMobs(this);
         boss = new BossFlorencia(this);
         zonas = new ZonaManager(this);
+        ambiente = new AmbienteManager(this);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(mobs, this);
         getServer().getPluginManager().registerEvents(boss, this);
+        getServer().getPluginManager().registerEvents(ambiente, this);
         getServer().getPluginManager().registerEvents(new CofresListener(this), this);
 
         getServer().getScheduler().runTaskTimer(this, () -> zonas.tick(), 40L, 40L);
         getServer().getScheduler().runTaskTimer(this, () -> boss.tick(), 20L, 10L);
+        getServer().getScheduler().runTaskTimer(this, () -> ambiente.tick(), 20L, 10L);
 
         // Si el mundo ya existe y Multiverse no lo cargo, lo cargamos nosotros.
         getServer().getScheduler().runTaskLater(this, this::autoCargar, 100L);

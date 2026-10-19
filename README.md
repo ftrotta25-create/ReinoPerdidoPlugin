@@ -56,6 +56,39 @@ guardias (bajo 66%) y eclipse (bajo 33%, además entra en furia). Reaparece a lo
 - El que más daño hizo recibe además la **Corona de Florencia** (casco con +4 armadura, +3 dureza,
   +3 corazones de vida y +8% velocidad) y una Nether Star.
 
+## Skin de Florencia (LibsDisguises)
+
+El jefe es un Evoker por dentro, pero si tenés **LibsDisguises** (+ **PacketEvents**, su dependencia) se
+disfraza de jugadora con la skin que le pongas. En `extras/skin_florencia.png` hay una skin de reina
+lista para usar (vestido violeta, pelo oscuro largo y corona dorada), o podés usar la tuya.
+
+1. Entrá a https://mineskin.org, subí el `.png` y elegí el modelo **Slim** (brazos finos, el de mujer).
+2. Copiá los campos `value` y `signature` que te da.
+3. Pegalos en `plugins/ReinoPerdidoPlugin/config.yml`:
+   ```yaml
+   skinFlorencia:
+     nombre: Florencia
+     value: 'EL_VALUE_LARGO'
+     signature: 'LA_SIGNATURE_LARGA'
+   ```
+4. Reiniciá. Si el jefe ya estaba en el mundo, se le vuelve a poner el disfraz solo.
+
+La clave `skinFlorencia` aparece sola en tu `config.yml` la primera vez que arranque esta versión.
+Sin LibsDisguises, o con `value`/`signature` vacíos, Florencia se ve como Evoker y todo lo demás funciona igual.
+
+## Ambiente: títulos, partículas y sonidos
+
+Para que la dimensión se sienta viva (todo se puede apagar en `config.yml`, bajo `ambiente`):
+
+- **Al entrar a la dimensión** (por el altar, `/reino tp` o al conectarte ahí): título *"EL REINO PERDIDO — Aquí gobernó
+  Florencia, la Reina*", un estruendo de portal con tres campanadas de amatista, y una espiral de partículas
+  alrededor tuyo.
+- **Siempre:** ceniza flotando, destellos violetas y bruma morada cerca de la ciudadela.
+- **Sonidos lejanos** desde direcciones al azar (cuevas, murmullos, resonancias de amatista).
+- **Dentro del torreón, la sala del trono y las catacumbas:** glifos flotando y **latidos** (más rápidos abajo, en las catacumbas).
+- **Un título al entrar a cada zona de la ciudadela:** Ciudadela de Florencia, El Torreón, La Sala del Trono, Las Catacumbas.
+- **El jefe:** título al despertar ("FLORENCIA — la Reina Perdida") y, al caer, un estallido de partículas y un título de victoria.
+
 ## Mobs modificados
 
 Todos los monstruos de la dimensión se modifican con 5 niveles, y cuanto más cerca de la ciudadela, más fuertes:
@@ -84,7 +117,8 @@ Los cofres generados se llenan **la primera vez que alguien los abre** (los que 
 
 ## Configuración (`config.yml`)
 
-`mundo`, `semilla`, `bordeMundo`, `autoCargar`, `bloquearAnimales`, `jefe.vida` y `jefe.minutosRespawn`.
+`mundo`, `semilla`, `bordeMundo`, `autoCargar`, `bloquearAnimales`, `jefe.vida`, `jefe.minutosRespawn`,
+`skinFlorencia` (nombre, value, signature) y `ambiente` (efectos, titulos).
 Los multiplicadores de los mobs están al principio de `ModificadorMobs.java` y las tablas de loot en `LootService.java`.
 
 ## Cosas para tener en cuenta
@@ -93,3 +127,4 @@ Los multiplicadores de los mobs están al principio de `ModificadorMobs.java` y 
   Si querés reemplazar o retocar la ciudadela, podés hacerlo en el juego (los cofres se reconocen por su posición).
 - Los jugadores pueden romper y construir en toda la dimensión, incluida la ciudadela.
 - El jefe es un Evoker con atributos y habilidades propias: conserva su IA de hechicero (colmillos y vex).
+  Con la skin puesta se ve como jugadora, pero su hitbox y sus movimientos siguen siendo los del Evoker.

@@ -5,6 +5,8 @@ import com.franchee.reino.estructuras.Ciudadela;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,6 +34,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +71,7 @@ public class BossFlorencia implements Listener {
     private long tGuardias;
     private long tEclipse;
     private boolean enFuria;
+    private boolean avisoSkin;
 
     public BossFlorencia(ReinoPerdidoPlugin plugin) {
         this.plugin = plugin;
@@ -119,6 +123,7 @@ public class BossFlorencia implements Listener {
         for (Entity e : w.getNearbyEntities(centroTrono(w), 30, 30, 30)) {
             if (e instanceof LivingEntity le && le.getPersistentDataContainer().has(keyBoss, PersistentDataType.BYTE)) {
                 bossId = le.getUniqueId();
+                aplicarDisfraz(le);
                 return true;
             }
         }
@@ -162,6 +167,7 @@ public class BossFlorencia implements Listener {
         });
 
         bossId = evoker.getUniqueId();
+        aplicarDisfraz(evoker);
         long ahora = System.currentTimeMillis();
         tLlamarada = ahora + 6000;
         tGuardias = ahora + 12000;
@@ -172,6 +178,40 @@ public class BossFlorencia implements Listener {
         Bukkit.broadcast(Component.text(
                 "Algo se despierta en la sala del trono de la Ciudadela del Reino Perdido...",
                 NamedTextColor.DARK_PURPLE));
+
+        for (Player p : w.getNearbyPlayers(loc, 40)) {
+            p.showTitle(Title.title(
+                    Component.text("FLORENCIA", NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD),
+                    Component.text("la Reina Perdida", NamedTextColor.GRAY),
+                    Title.Times.times(Duration.ofMillis(300), Duration.ofMillis(2500), Duration.ofMillis(800))));
+        }
+    }
+
+    /**
+     * Le pone la skin de mujer (via LibsDisguises) si esta instalado y configurado.
+     * Si no, Florencia se ve como Evoker y todo lo demas funciona igual.
+     */
+    private void aplicarDisfraz(LivingEntity boss) {
+        if (!plugin.getServer().getPluginManager().isPluginEnabled("LibsDisguises")) return;
+
+        String value = plugin.getConfig().getString("skinFlorencia.value", "");
+        String signature = plugin.getConfig().getString("skinFlorencia.signature", "");
+        if (value == null || value.isBlank() || signature == null || signature.isBlank()) {
+            if (!avisoSkin) {
+                avisoSkin = true;
+                plugin.getLogger().info("Florencia no tiene skin configurada (skinFlorencia.value/signature "
+                        + "en config.yml): se ve como Evoker.");
+            }
+            return;
+        }
+
+        try {
+            if (DisfrazFlorencia.estaDisfrazado(boss)) return;
+            DisfrazFlorencia.aplicar(boss, plugin.getConfig().getString("skinFlorencia.nombre", "Florencia"),
+                    value, signature);
+        } catch (Throwable ex) {
+            plugin.getLogger().warning("No se pudo aplicar el disfraz de Florencia: " + ex.getMessage());
+        }
     }
 
     // ------------------------------------------------------------ tick
@@ -323,6 +363,8 @@ public class BossFlorencia implements Listener {
         bossId = null;
         ocultarBarra(ent.getWorld());
         ent.getWorld().playSound(ent.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 2.0f, 0.8f);
+        ent.getWorld().spawnParticle(Particle.TOTEM, ent.getLocation().add(0, 1, 0), 150, 1.5, 1.5, 1.5, 0.4);
+        ent.getWorld().spawnParticle(Particle.DRAGON_BREATH, ent.getLocation().add(0, 1, 0), 120, 2, 1.5, 2, 0.05);
         Bukkit.broadcast(Component.text("Florencia, la Reina Perdida, se desvaneció... otra vez.", NamedTextColor.LIGHT_PURPLE));
     }
 
@@ -351,6 +393,10 @@ public class BossFlorencia implements Listener {
             dar(p, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 2));
             p.giveExp(1500);
             p.sendMessage(Component.text("Recibiste tu parte del tesoro de la Reina.", NamedTextColor.LIGHT_PURPLE));
+            p.showTitle(Title.title(
+                    Component.text("LA REINA CAYÓ", NamedTextColor.GOLD, TextDecoration.BOLD),
+                    Component.text("Su tesoro es tuyo", NamedTextColor.GRAY),
+                    Title.Times.times(Duration.ofMillis(400), Duration.ofMillis(3000), Duration.ofMillis(1000))));
 
             if (uuid.equals(mvpId)) {
                 dar(p, plugin.getLoot().corona());

@@ -5,7 +5,7 @@ api-version: '1.20'
 author: Franchee
 description: El Reino Perdido de Florencia - dimension con ciudadela gigante, mobs modificados y jefe final.
 loadbefore: [Multiverse-Core]
-softdepend: [LibroFlorenciaPlugin, JefeCabraPlugin, MateSystemPlugin, EventoPlugin]
+softdepend: [LibsDisguises, LibroFlorenciaPlugin, JefeCabraPlugin, MateSystemPlugin, EventoPlugin]
 
 commands:
   reino:
